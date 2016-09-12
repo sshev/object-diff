@@ -58,9 +58,7 @@ function objDiff(obj1, obj2) {
     return paths;
   }
 
-  // not {...} and not [...], or not {}
   function _isPlainValue(val) {
-    // console.log(val, !_.isPlainObject(val) && !_.isArray(val));//xxx
     return !_.isPlainObject(val) && !_.isArray(val);
   }
 }
