@@ -1,2 +1,2 @@
 # object-diff
-User-friendly objects diff
+User-friendly object diff
