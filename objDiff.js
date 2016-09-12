@@ -12,18 +12,26 @@ function objDiff(obj1, obj2) {
     const val2 = _.has(obj2, path) ? _.get(obj2, path) : KEY_DOES_NOT_EXIST;
 
     if (!_.isEqual(val1, val2) || (val1 === KEY_DOES_NOT_EXIST && val2 === KEY_DOES_NOT_EXIST)) {
-
-      // TODO: fix [] and {} comparison
-      if (_isPlainValue(val1) || _isPlainValue(val2)) {
-        result[path] = {
-          obj1: val1 && val1.toString ? val1.toString() : val1,
-          obj2: val2 && val2.toString ? val2.toString() : val2
-        };
+      if (_isPlainValue(val1) || _isPlainValue(val2) || (_.isEmpty(val1) && _.isEmpty(val2))) {
+        result[path] = { obj1: _toStr(val1), obj2: _toStr(val2) };
       }
     }
   });
 
   return result;
+
+  function _toStr(val) {
+    let result = val;
+
+    if (Array.isArray(val)) {
+      result = JSON.stringify(val);
+    } else
+    if (val && val.toString) {
+      result = val.toString()
+    }
+
+    return result;
+  }
 
   // recursively build paths for all object props
   // i.e. { foo: { bar: 'val' '}} --> ['foo', 'foo.bar']
@@ -50,7 +58,9 @@ function objDiff(obj1, obj2) {
     return paths;
   }
 
+  // not {...} and not [...], or not {}
   function _isPlainValue(val) {
+    // console.log(val, !_.isPlainObject(val) && !_.isArray(val));//xxx
     return !_.isPlainObject(val) && !_.isArray(val);
   }
 }

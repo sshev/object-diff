@@ -40,6 +40,14 @@ describe('objDiff()', () => {
       expect(objDiff(obj1, obj2)).toEqual({ 'name.first': { obj1: obj1.name.first, obj2: obj2.name.first } });
     });
 
+    it('should compare plain value with object', () => {
+      obj1.name.first = { aaa: 'bbb' };
+      expect(objDiff(obj1, obj2)).toEqual({
+        'name.first': { obj1: '[object Object]', obj2: obj2.name.first },
+        'name.first.aaa': { obj1: 'bbb', obj2: 'KEY_DOES_NOT_EXIST' },
+      });
+    });
+
     it('should compare deep array props', () => {
       obj1.friends[1].name = 'John Smith';
       obj1.friends[2].name = 'Foo Bar';
@@ -68,6 +76,24 @@ describe('objDiff()', () => {
       expect(objDiff(obj1, obj2)).toEqual({ prop: { obj1: undefined, obj2: 0 } });
     });
 
+    it('should handle comparison "0" vs 0', () => {
+      obj1.prop = '0';
+      obj2.prop = 0;
+      expect(objDiff(obj1, obj2)).toEqual({ prop: { obj1: '0', obj2: 0 } });
+    });
+
+    it('should handle comparison "0" vs {}', () => {
+      obj1.prop = 0;
+      obj2.prop = {};
+      expect(objDiff(obj1, obj2)).toEqual({ prop: { obj1: 0, obj2: '[object Object]' } });
+    });
+
+    it('should handle comparison "" vs []', () => {
+      obj1.prop = '';
+      obj2.prop = [];
+      expect(objDiff(obj1, obj2)).toEqual({ prop: { obj1: '', obj2: '[]' } });
+    });
+
     it('should handle comparison with regexp', () => {
       obj1.prop = '';
       obj2.prop = /abc/;
@@ -80,11 +106,10 @@ describe('objDiff()', () => {
       expect(objDiff(obj1, obj2)).toEqual({ prop: { obj1: undefined, obj2: '() => {}' } });
     });
 
-    // TODO: enable when comparison [] vs {} fixed
-    xit('should handle comparison [] vs {}', () => {
+    it('should handle comparison [] vs {}', () => {
       obj1.prop = [];
       obj2.prop = {};
-      expect(objDiff(obj1, obj2)).toEqual({ prop: { obj1: [], obj2: {} } });
+      expect(objDiff(obj1, obj2)).toEqual({ prop: { obj1: '[]', obj2: '[object Object]' } });
     });
   });
 
