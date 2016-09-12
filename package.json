@@ -1,0 +1,18 @@
+{
+  "name": "obj-diff",
+  "version": "0.0.1",
+  "description": "",
+  "main": "objDiff.js",
+  "scripts": {
+    "demo": "node demo",
+    "test": "node jasmine.conf"
+  },
+  "author": "Sergey Shevchenko",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.15.0"
+  },
+  "devDependencies": {
+    "jasmine": "^2.5.1"
+  }
+}
